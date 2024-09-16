@@ -14,7 +14,7 @@ export const createUserService = async (payload:ICreateUserSchema) => {
     const salt = await bcrypt.genSalt(12);
     const passhash = await bcrypt.hash(payload.password, salt);
     payload.password = passhash;
-    const user = await User.create(payload).select("-password");
+    const user = await User.create(payload);
 
     return "User created successfully";
 }
