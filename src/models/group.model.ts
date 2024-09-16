@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema, StringExpressionOperatorReturningBoolean } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-interface IGroup {
+interface IGroup extends Document {
     name: string
 }
 
@@ -11,3 +11,4 @@ const GroupSchema: Schema<IGroup> = new Schema({
 const Group = mongoose.model<IGroup>('Group', GroupSchema);
 
 export default Group;
+export { IGroup };
