@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { createUserController } from "../controllers/user.controller";
+import { createUserController, updateUserController } from "../controllers/user.controller";
 import { validateBody } from "../middleware/validate.middleware";
-import { createUserSchema } from "../schemas/user.schema";
+import { createUserSchema, updateUserSchema } from "../schemas/user.schema";
 
 const userRoutes = Router();
 
 userRoutes
-    .post("/create", validateBody(createUserSchema), createUserController);
+    .post("/", validateBody(createUserSchema), createUserController)
+    .put("/", validateBody(updateUserSchema), updateUserController);
 
 export default userRoutes;
