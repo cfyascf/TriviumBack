@@ -6,6 +6,6 @@ import { createFormController } from "../controllers/form.controller";
 const formRoutes = Router();
 
 formRoutes
-    .post('/create', validateBody(createFormSchema), createFormController);
+    .post("", validateBody(createFormSchema), createFormController);
 
 export default formRoutes;

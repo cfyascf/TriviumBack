@@ -8,7 +8,7 @@ export const createUserController = async (req: Request, res: Response) => {
 }
 
 export const updateUserController = async (req: Request, res: Response) => {
-    const service = await updateUserService(req.body);
+    const service = await updateUserService(req.body, res.locals.userid);
 
     res.status(200).json({ user: service });
 }

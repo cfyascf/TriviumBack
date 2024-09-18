@@ -6,6 +6,6 @@ import { loginController } from "../controllers/auth.controller";
 const authRoutes = Router();
 
 authRoutes
-    .post("/login", validateBody(loginSchema), loginController);
+    .post("", validateBody(loginSchema), loginController);
 
 export default authRoutes;
