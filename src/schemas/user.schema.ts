@@ -24,4 +24,4 @@ type IUpdateUserSchema = z.infer<typeof updateUserSchema>;
 export { 
     createUserSchema, ICreateUserSchema,
     updateUserSchema, IUpdateUserSchema
- }
+};
