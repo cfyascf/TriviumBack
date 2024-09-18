@@ -46,7 +46,7 @@ export const deleteFormService = async (id: string) => {
 
     await Form.deleteOne({ _id: id });
 
-    return "Form updated successfully";
+    return "Form deleted successfully";
 }
 
 export const getAllFormService = async () => {

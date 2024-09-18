@@ -8,8 +8,8 @@ const createFormSchema = z.object({
 type ICreateFormSchema = z.infer<typeof createFormSchema>;
 
 const updateFormSchema = z.object({
-    title: z.string().nullable(),
-    description: z.string().nullable(),
+    title: z.string().nullable().optional(),
+    description: z.string().nullable().optional(),
 });
 
 type IUpdateFormSchema = z.infer<typeof updateFormSchema>;
