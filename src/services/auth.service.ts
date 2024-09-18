@@ -8,8 +8,8 @@ import { AppError } from "../error";
 const { sign } = pkg;
 
 export const loginService = async (payload:ILoginSchema) => {
-    const user = await User.findOne({ email: payload.email }).select("-password");
-    if(user == null) {
+    let user = await User.findOne({ email: payload.email });
+    if(!user) {
         throw new AppError("Email not registered.", 401);
     }
 
@@ -27,5 +27,6 @@ export const loginService = async (payload:ILoginSchema) => {
         }
     )
 
-    return { token, ...user };
+    user.password = "";
+    return { token, user: { ...user } };
 }
