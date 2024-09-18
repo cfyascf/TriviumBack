@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
 import User from "../models/user.model";
+import UserMatch from "../models/userMatch.model";
 import { ICreateUserSchema, IUpdateUserSchema } from "../schemas/user.schema";
 import { AppError } from "../error";
 import { hashPasswordService } from './password.service';
@@ -37,6 +37,20 @@ export const updateUserService = async (payload:IUpdateUserSchema, userid:string
 
     await user.save();
     user.password = "";
+
+    return { ...user };
+}
+
+export const getUserByMatchService = async (matchId:string) => {
+    const userMatchs = await UserMatch.find({ matchId });
+    const usersIds = userMatchs.map(match => match.userId);
+    const users = await User.find({ _id: { $in: usersIds } });
+
+    return { ...users };
+}
+
+export const getUserByIdService = async (id:string) => {
+    const user = await User.findById(id);
 
     return { ...user };
 }
