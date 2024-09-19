@@ -41,3 +41,29 @@ export const updateOptionService = async (id: string, payload:IUpdateOptionSchem
 
     return option;
 }
+
+export const deleteOptionService = async (id: string) => {
+    if(!id) 
+        throw new AppError("Id is missing.", 404);
+
+    const option = await Option.findById(id);
+
+    if(!option)
+        throw new AppError("Option not found.", 404);
+
+    await Option.deleteOne({ _id: id });
+
+    return "Option deleted successfully.";
+}
+
+export const getOptionByQuestionIdService = async (id: string) => {
+    if(!id)
+        throw new AppError("Id is missing.", 404);
+
+    const option = await Option.find({ questionId: id });
+
+    if(!option)
+        throw new AppError("Option not found.", 404);
+
+    return option;
+}
