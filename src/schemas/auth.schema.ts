@@ -7,4 +7,4 @@ const loginSchema = z.object({
 
 type ILoginSchema = z.infer<typeof loginSchema>;
 
-export { loginSchema, ILoginSchema }
+export { loginSchema, ILoginSchema };
