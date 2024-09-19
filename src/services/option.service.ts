@@ -10,13 +10,13 @@ export const createOptionService = async (payload:ICreateOptionSchema) => {
     if(!question) 
         throw new AppError("Question not found.", 404);
 
-    const op = new Option({
+    const option = new Option({
         description: payload.description,
         questionId: question,
         isRight: payload.isRight
     });
 
-    const option = await op.save();
+    await option.save();
 
     return option;
 }
