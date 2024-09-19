@@ -7,4 +7,11 @@ const createFormSchema = z.object({
 
 type ICreateFormSchema = z.infer<typeof createFormSchema>;
 
-export { createFormSchema, ICreateFormSchema };
+const updateFormSchema = z.object({
+    title: z.string().nullable().optional(),
+    description: z.string().nullable().optional(),
+});
+
+type IUpdateFormSchema = z.infer<typeof updateFormSchema>;
+
+export { createFormSchema, ICreateFormSchema, IUpdateFormSchema, updateFormSchema };

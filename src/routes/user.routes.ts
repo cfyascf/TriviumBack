@@ -6,9 +6,9 @@ import { createUserSchema, updateUserSchema } from "../schemas/user.schema";
 const userRoutes = Router();
 
 userRoutes
-    .post("/", validateBody(createUserSchema), createUserController)
-    .put("/", validateBody(updateUserSchema), validateToken, updateUserController)
+    .post("", validateBody(createUserSchema), createUserController)
+    .put("", validateBody(updateUserSchema), validateToken, updateUserController)
     .get("/match", getUserByMatchController)
-    .get("/", getUserByIdController);
+    .get("", getUserByIdController);
 
 export default userRoutes;

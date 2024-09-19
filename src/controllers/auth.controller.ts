@@ -5,5 +5,5 @@ import { ILoginSchema } from "../schemas/auth.schema";
 export const loginController = async (req:Request, res:Response) => {
     const service = await loginService(req.body);
 
-    return res.status(200).json({ message: service.token, user: service.user });
+    return res.status(200).json({ token: service.token, user: service.user });
 }
