@@ -10,7 +10,12 @@ export const createQuestionService = async (payload:ICreateQuestionSchema) => {
     if(!form)
         throw new AppError('Form not found.', 404);
 
-    const question = await Question.create(payload);
+    const question = new Question({
+        title: payload.title,
+        formId: form
+    });
+
+    await question.save();
 
     return question;
 }
