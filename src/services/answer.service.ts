@@ -3,7 +3,7 @@ import Answer from "../models/answer.model";
 import Option, { IOption } from "../models/option.model";
 import Question, { IQuestion } from "../models/question.model";
 import User from "../models/user.model";
-import { ICreateAnswerSchema } from "../schemas/answer.schema";
+import { ICreateAnswerSchema, IGetAnswerSchema } from "../schemas/answer.schema";
 import { getOptionByQuestionIdService } from "./option.service";
 
 export const createAnswerService = async (payload:ICreateAnswerSchema) => {
@@ -43,6 +43,25 @@ export const getAnswerByQuestionIdService = async (id: string) =>  {
     if(!id) throw new AppError("Id is missing.", 404);
 
     const answer = await Answer.find({ questionId: id });
+
+    if(!answer) throw new AppError("Option not found.", 404);
+
+    return answer;
+}
+
+export const getAnswerByQuestionIdByUserService = async (UserId: string, QuestionId: string) =>  {
+    
+    if(!UserId || UserId === "" || !QuestionId || QuestionId === "") throw new AppError("Id is missing.", 404);
+
+    const user = await User.findById(UserId);
+
+    if(!user) throw new AppError("User not found.", 404);
+
+    const question = await Question.find({ id: QuestionId });
+
+    if(!question) throw new AppError("Question not found.", 404);
+
+    const answer = await Answer.find({ questionId: QuestionId, userId: UserId });
 
     if(!answer) throw new AppError("Option not found.", 404);
 

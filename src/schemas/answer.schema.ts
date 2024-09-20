@@ -8,5 +8,10 @@ const createAnswerSchema = z.object({
 
 type ICreateAnswerSchema = z.infer<typeof createAnswerSchema>;
 
+const getAnswerByQuestionIdByUserSchema = z.object({
+    userId: z.string()
+});
 
-export { createAnswerSchema, ICreateAnswerSchema };
+type IGetAnswerSchema = z.infer<typeof getAnswerByQuestionIdByUserSchema>;
+
+export { createAnswerSchema, ICreateAnswerSchema, IGetAnswerSchema, getAnswerByQuestionIdByUserSchema }
