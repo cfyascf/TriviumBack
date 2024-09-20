@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUserController, getUserByIdController, getUserByMatchController, updateUserController } from "../controllers/user.controller";
+import { createUserController, deleteUserController, getUserByIdController, getUserByMatchController, updateUserController } from "../controllers/user.controller";
 import { validateBody, validateToken } from "../middleware/validate.middleware";
 import { createUserSchema, updateUserSchema } from "../schemas/user.schema";
 
@@ -10,6 +10,6 @@ userRoutes
     .put("", validateBody(updateUserSchema), validateToken, updateUserController)
     .get("/match", getUserByMatchController)
     .get("", getUserByIdController)
-    .delete("");
+    .delete("", validateToken, deleteUserController);
 
 export default userRoutes;
