@@ -10,6 +10,7 @@ import questionRoutes from "./routes/question.routes";
 import matchRoutes from "./routes/match.routes";
 import optionRoutes from "./routes/option.routes";
 import answerRoutes from "./routes/answer.routes";
+import scoreRoutes from "./routes/score.routes";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/v1/question', questionRoutes);
 app.use('/api/v1/match', matchRoutes);
 app.use('/api/v1/option', optionRoutes);
 app.use('/api/v1/answer', answerRoutes);
+app.use('/api/v1/score', scoreRoutes);
 
 app.use(handleError);
 
