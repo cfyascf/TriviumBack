@@ -10,11 +10,7 @@ const connectDb = () => {
     
     mongoose.connect(db)
         .then(() => console.log(`Connected to ${db}.`))
-<<<<<<< HEAD
         .catch((error) => console.log('Error running server: ' + error));
-=======
-        .catch((error) => console.log(error))
->>>>>>> feat-yasmim
 }
 
 export default connectDb
