@@ -32,7 +32,8 @@ export const updateUserService = async (payload:IUpdateUserSchema, userid:string
     }
 
     if(payload.password) {
-        user.password = await hashPasswordService(user.password);
+        const newPassword = await hashPasswordService(payload.password);
+        user.password = newPassword;
     }
 
     await user.save();
@@ -51,6 +52,15 @@ export const getUserByMatchService = async (matchId:string) => {
 
 export const getUserByIdService = async (id:string) => {
     const user = await User.findById(id);
+    if(user == null) {
+        throw new AppError("User not found.", 404);
+    }
+
+    return { ...user };
+}
+
+export const deleteUserService = async (id:string) => {
+    const user = await User.findByIdAndDelete(id);
 
     return { ...user };
 }
