@@ -44,6 +44,11 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
         throw new AppError("Match not found.", 404);
     }
 
+    const existing = await UserMatch.find({ userId:payload.userId, matchId: payload.matchId });
+    if(existing.length > 0) {
+        throw new AppError("User already in match.", 400);
+    }
+
     const userMatch = new UserMatch({
         userId: user,
         matchId: match
@@ -90,7 +95,7 @@ export const getMatchByIdService = async (id:string) => {
 }
 
 export const getMatchByUserService = async (userId:string) => {
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
     if(user == null) {
         throw new AppError("User not found.", 404);
     }
@@ -103,18 +108,18 @@ export const getMatchByUserService = async (userId:string) => {
 }
 
 export const getMatchByAdmService = async (admId:string) => {
-    const adm = User.findById(admId);
+    const adm = await User.findById(admId);
     if(adm == null) {
         throw new AppError("Adm's user not found.", 404);
     }
 
-    const matches = Match.find({ admId });
+    const matches = await Match.find({ admId });
 
     return { ...matches };
 }
 
 export const getMatchByUserAndFormService = async (userId:string, formId:string) => {
-    const user = User.findById(userId);
+    const user = await User.findById(userId);
     if(user == null) {
         throw new AppError("User not found.", 404);
     }
@@ -127,7 +132,7 @@ export const getMatchByUserAndFormService = async (userId:string, formId:string)
     const userMatches = await UserMatch.find({ userId });
     const matchesIds = userMatches.map(match => match.matchId);
     const allMatches = await Match.find({ _id: { $in: matchesIds } });
-    const filteredMatches = allMatches.map(match => String(match.formId) == formId);
+    const matches = allMatches.filter(match => String(match.formId) == formId);
 
-    return { ...filteredMatches };
+    return { ...matches };
 }
