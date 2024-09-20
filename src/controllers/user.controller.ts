@@ -14,13 +14,13 @@ export const updateUserController = async (req: Request, res: Response) => {
 }
 
 export const getUserByMatchController = async (req: Request, res: Response) => {
-    const service = await getUserByMatchService(String(req.query.matchid));
+    const service = await getUserByMatchService(String(req.query.id));
 
     res.status(200).json({ users: service });
 }
 
 export const getUserByIdController = async (req: Request, res: Response) => {
-    const service = await getUserByIdService(String(req.query.userid));
+    const service = await getUserByIdService(String(req.query.id));
 
     res.status(200).json({ user: service });
 }

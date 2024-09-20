@@ -7,6 +7,7 @@ import { handleError } from "./middleware/errorHandler.middleware";
 import formRoutes from "./routes/form.routes";
 import userRoutes from "./routes/user.routes";
 import questionRoutes from "./routes/question.routes";
+import matchRoutes from "./routes/match.routes";
 import optionRoutes from "./routes/option.routes";
 import answerRoutes from "./routes/answer.routes";
 
@@ -21,6 +22,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/form', formRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/question', questionRoutes);
+app.use('/api/v1/match', matchRoutes);
 app.use('/api/v1/option', optionRoutes);
 app.use('/api/v1/answer', answerRoutes);
 

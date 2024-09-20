@@ -22,7 +22,11 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
         token, 
         String(process.env.SECRET),
         (err:any, decoded:any) => {
-            res.locals.userid = decoded.userid
+            try {
+                res.locals.userid = decoded.userid
+            } catch(err) {
+                throw new AppError("Invalid JWT token.", 401);
+            }
         }); 
 
     return next();

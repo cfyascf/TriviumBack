@@ -6,6 +6,22 @@ const createMatchSchema = z.object({
     admId: z.string()
 });
 
-type ICreateMatchSchema = z.infer<typeof createMatchSchema>;
+const addUserToMatchSchema = z.object({
+    userId: z.string(),
+    matchId: z.string()
+});
 
-export { createMatchSchema, ICreateMatchSchema };
+const updateMatchSchema = z.object({
+    matchId: z.string(),
+    formId: z.string()
+});
+
+type ICreateMatchSchema = z.infer<typeof createMatchSchema>;
+type IAddUserToGroupSchema = z.infer<typeof addUserToMatchSchema>;
+type IUpdateMatchSchema = z.infer<typeof updateMatchSchema>;
+
+export { 
+    createMatchSchema, ICreateMatchSchema,
+    addUserToMatchSchema, IAddUserToGroupSchema,
+    updateMatchSchema, IUpdateMatchSchema
+};

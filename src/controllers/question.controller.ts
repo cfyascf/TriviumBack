@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { createQuestionService, deleteQuestionService, findQuestionByFormIdService, updateQuestionService } from '../services/question.service';
 
 export const createQuestionController = async (req: Request, res: Response) => {
-
     const result = await createQuestionService(req.body);
 
     return res.status(201).json({ message: 'Question created successfully', data: result });
