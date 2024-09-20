@@ -9,6 +9,7 @@ userRoutes
     .post("", validateBody(createUserSchema), createUserController)
     .put("", validateBody(updateUserSchema), validateToken, updateUserController)
     .get("/match", getUserByMatchController)
-    .get("", getUserByIdController);
+    .get("", getUserByIdController)
+    .delete("");
 
 export default userRoutes;
