@@ -87,13 +87,23 @@ export const updateMatchService = async (payload:IUpdateMatchSchema, userId:stri
     return { ...match };
 }
 
-export const getMatchByIdService = async (id:string) => {
+export const getMatchByIdService = async (id: string) => {
     const match = await Match.findById(id);
-    if(match == null) {
+    
+    if (match == null) {
         throw new AppError("Match not found.", 404);
     }
 
-    return { ...match };
+    const userMatches = await UserMatch.find({ matchId: id });
+    const usersId = userMatches.map(match => match.userId);
+
+    const users = await User.find({ _id: { $in: usersId } });
+
+    users.forEach(user => {
+        user.password = '';
+    });
+
+    return { match: match, users: users };
 }
 
 export const getMatchByUserService = async (userId: string) => {
