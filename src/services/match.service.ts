@@ -41,12 +41,12 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
         throw new AppError("User not found.", 404);
     }
 
-    const match = await Match.findById(payload.matchId);
+    const match = await Match.findOne({ pin: payload.pin });
     if(match == null) {
         throw new AppError("Match not found.", 404);
     }
 
-    const existing = await UserMatch.find({ userId:payload.userId, matchId: payload.matchId });
+    const existing = await UserMatch.find({ userId:payload.userId, match });
     if(existing.length > 0) {
         throw new AppError("User already in match.", 400);
     }
@@ -58,7 +58,7 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
 
     await userMatch.save();
 
-    return "User added to group successfully!";
+    return "Entering room.";
 }
 
 export const updateMatchService = async (payload:IUpdateMatchSchema, userId:string) => {
