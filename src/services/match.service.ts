@@ -46,7 +46,7 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
         throw new AppError("Match not found.", 404);
     }
 
-    const existing = await UserMatch.find({ userId:payload.userId, match });
+    const existing = await UserMatch.find({ userId:payload.userId, matchId: match._id });
     if(existing.length > 0) {
         throw new AppError("User already in match.", 400);
     }
@@ -58,7 +58,7 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
 
     await userMatch.save();
 
-    return "Entering room.";
+    return {message: "Entering room.", match: match._id };
 }
 
 export const updateMatchService = async (payload:IUpdateMatchSchema, userId:string) => {
