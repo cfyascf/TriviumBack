@@ -8,7 +8,7 @@ const createMatchSchema = z.object({
 
 const addUserToMatchSchema = z.object({
     userId: z.string(),
-    matchId: z.string()
+    pin: z.string()
 });
 
 const updateMatchSchema = z.object({

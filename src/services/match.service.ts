@@ -4,6 +4,8 @@ import User from "../models/user.model";
 import UserMatch from "../models/userMatch.model";
 import { IAddUserToGroupSchema, ICreateMatchSchema, IUpdateMatchSchema } from "../schemas/match.schema";
 import { AppError } from "../error";
+import Score from "../models/score.model";
+import mongoose from "mongoose";
 
 export const createMatchService = async (payload:ICreateMatchSchema) => {
     const pin = getRandom();
@@ -39,12 +41,12 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
         throw new AppError("User not found.", 404);
     }
 
-    const match = await Match.findById(payload.matchId);
+    const match = await Match.findOne({ pin: payload.pin });
     if(match == null) {
         throw new AppError("Match not found.", 404);
     }
 
-    const existing = await UserMatch.find({ userId:payload.userId, matchId: payload.matchId });
+    const existing = await UserMatch.find({ userId:payload.userId, matchId: match._id });
     if(existing.length > 0) {
         throw new AppError("User already in match.", 400);
     }
@@ -56,7 +58,7 @@ export const addUserService = async (payload:IAddUserToGroupSchema) => {
 
     await userMatch.save();
 
-    return "User added to group successfully!";
+    return {message: "Entering room.", match: match._id };
 }
 
 export const updateMatchService = async (payload:IUpdateMatchSchema, userId:string) => {
@@ -85,27 +87,49 @@ export const updateMatchService = async (payload:IUpdateMatchSchema, userId:stri
     return { ...match };
 }
 
-export const getMatchByIdService = async (id:string) => {
+export const getMatchByIdService = async (id: string) => {
     const match = await Match.findById(id);
-    if(match == null) {
+    
+    if (match == null) {
         throw new AppError("Match not found.", 404);
     }
 
-    return { ...match };
+    const userMatches = await UserMatch.find({ matchId: id });
+    const usersId = userMatches.map(match => match.userId);
+
+    const users = await User.find({ _id: { $in: usersId } });
+
+    users.forEach(user => {
+        user.password = '';
+    });
+
+    return { match: match, users: users };
 }
 
-export const getMatchByUserService = async (userId:string) => {
+export const getMatchByUserService = async (userId: string) => {
     const user = await User.findById(userId);
-    if(user == null) {
+    if (!user) {
         throw new AppError("User not found.", 404);
     }
 
     const userMatches = await UserMatch.find({ userId });
     const matchesIds = userMatches.map(match => match.matchId);
-    const matches = await Match.find({ _id: { $in: matchesIds } });
 
-    return { ...matches };
-}
+    const matches = await Match.find({ _id: { $in: matchesIds } })
+        .populate('formId')
+
+    const scores = await Score.find({ matchId: { $in: matchesIds } });
+
+    const matchesWithScores = matches.map(match => {
+        const score = scores.find(score => String(score.matchId) === String(match._id));
+        return {
+            ...match.toObject(),
+            score: score || null,
+        };
+    });
+
+    return matchesWithScores;
+};
 
 export const getMatchByAdmService = async (admId:string) => {
     const adm = await User.findById(admId);

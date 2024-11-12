@@ -10,7 +10,7 @@ export const createMatchController = async (req:Request, res:Response) => {
 export const addUserController = async (req:Request, res:Response) => {
     const service = await addUserService(req.body);
 
-    res.status(200).json({ message: service });
+    res.status(200).json({ data: service });
 }
 
 export const updateMatchController = async (req:Request, res:Response) => {
