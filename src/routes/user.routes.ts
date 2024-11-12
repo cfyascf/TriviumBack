@@ -6,7 +6,7 @@ import { createUserSchema, updateUserSchema } from "../schemas/user.schema";
 const userRoutes = Router();
 
 userRoutes
-    .post("", validateBody(createUserSchema), createUserController)
+    .post("", createUserController)
     .put("", validateBody(updateUserSchema), validateToken, updateUserController)
     .get("/match", getUserByMatchController)
     .get("", getUserByIdController)
