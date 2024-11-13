@@ -170,8 +170,11 @@ export const removeUserFromMatchService = async (payload: IRemoveUserFromGroupSc
         throw new AppError("Match not found.", 404);
     }
 
-    const userMatch = await UserMatch.find({ userId:user._id, matchId: match._id });
-    UserMatch.deleteOne({ userMatch });
+    const userMatch = await UserMatch.findOne({ userId:user._id, matchId: match._id });
+    if(userMatch == null) {
+        throw new AppError("UserMatch not found.", 404);
+    }
+    await userMatch.deleteOne();
 
-    return "User removed from the match successfully!";
+    return match;
 }
