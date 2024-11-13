@@ -11,6 +11,11 @@ const addUserToMatchSchema = z.object({
     pin: z.string()
 });
 
+const removeUserFromMatchSchema = z.object({
+    userId: z.string(),
+    matchId: z.string()
+});
+
 const updateMatchSchema = z.object({
     matchId: z.string(),
     formId: z.string()
@@ -18,10 +23,12 @@ const updateMatchSchema = z.object({
 
 type ICreateMatchSchema = z.infer<typeof createMatchSchema>;
 type IAddUserToGroupSchema = z.infer<typeof addUserToMatchSchema>;
+type IRemoveUserFromGroupSchema = z.infer<typeof removeUserFromMatchSchema>;
 type IUpdateMatchSchema = z.infer<typeof updateMatchSchema>;
 
 export { 
     createMatchSchema, ICreateMatchSchema,
     addUserToMatchSchema, IAddUserToGroupSchema,
+    removeUserFromMatchSchema, IRemoveUserFromGroupSchema,
     updateMatchSchema, IUpdateMatchSchema
 };

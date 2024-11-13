@@ -1,11 +1,11 @@
+import mongoose from "mongoose";
 import Form from "../models/form.model";
 import Match, { IMatch } from "../models/match.model";
 import User from "../models/user.model";
 import UserMatch from "../models/userMatch.model";
-import { IAddUserToGroupSchema, ICreateMatchSchema, IUpdateMatchSchema } from "../schemas/match.schema";
+import { IAddUserToGroupSchema, ICreateMatchSchema, IRemoveUserFromGroupSchema, IUpdateMatchSchema } from "../schemas/match.schema";
 import { AppError } from "../error";
 import Score from "../models/score.model";
-import mongoose from "mongoose";
 
 export const createMatchService = async (payload:ICreateMatchSchema) => {
     const pin = getRandom();
@@ -157,4 +157,21 @@ export const getMatchByUserAndFormService = async (userId:string, formId:string)
     const matches = allMatches.filter(match => String(match.formId) == formId);
 
     return { ...matches };
+}
+
+export const removeUserFromMatchService = async (payload: IRemoveUserFromGroupSchema) => {
+    const user = await User.findById(payload.userId);
+    if(user == null) {
+        throw new AppError("User not found.", 404);
+    }
+
+    const match = await Match.findById(payload.matchId);
+    if(match == null) {
+        throw new AppError("Match not found.", 404);
+    }
+
+    const userMatch = await UserMatch.find({ userId:user._id, matchId: match._id });
+    UserMatch.deleteOne({ userMatch });
+
+    return "User removed from the match successfully!";
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addUserService, createMatchService, getMatchByAdmService, getMatchByIdService, getMatchByUserAndFormService, getMatchByUserService, updateMatchService } from "../services/match.service";
+import { addUserService, createMatchService, getMatchByAdmService, getMatchByIdService, getMatchByUserAndFormService, getMatchByUserService, removeUserFromMatchService, updateMatchService } from "../services/match.service";
 
 export const createMatchController = async (req:Request, res:Response) => {
     const service = await createMatchService(req.body);
@@ -39,6 +39,12 @@ export const getMatchController = async (req:Request, res:Response) => {
             String(req.query.userid), String(req.query.formid)
         );
     }
+
+    res.status(200).json({ data: service });
+}
+
+export const removeUserFromMatchController = async (req:Request, res:Response) => {
+    const service = await removeUserFromMatchService(req.body);
 
     res.status(200).json({ data: service });
 }
