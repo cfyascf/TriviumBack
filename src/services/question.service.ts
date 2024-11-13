@@ -1,5 +1,6 @@
 import { AppError } from "../error";
 import Form from "../models/form.model";
+import Option from "../models/option.model";
 import Question from "../models/question.model";
 import { ICreateQuestionSchema, IUpdateQuestionSchema } from "../schemas/question.schema";
 
@@ -17,7 +18,18 @@ export const createQuestionService = async (payload:ICreateQuestionSchema) => {
 
     await question.save();
 
-    return question;
+    const options = payload.options.map(option => {
+        return new Option({
+            description: option.description,
+            isRight: option.isRight,
+            questionId: question._id
+        });
+    });
+
+    await Option.insertMany(options);
+
+    return { question, options };
+
 }
 
 export const updateQuestionService = async (id: string, payload:IUpdateQuestionSchema) => {
