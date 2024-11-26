@@ -64,3 +64,17 @@ export const deleteUserService = async (id:string) => {
 
     return { ...user };
 }
+
+export const getAllUserService = async (search: string | null) => {
+    var users = null;
+
+    if (search == null) {
+        users = await User.find();
+    }
+
+    if (search != null) {
+        users = await User.find({ fullname: { $regex: search, $options: 'i' } });
+    }
+
+    return { users: users }
+}
