@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createQuestionService, deleteQuestionService, findQuestionByFormIdService, updateQuestionService } from '../services/question.service';
+import { createQuestionService, deleteQuestionService, findQuestionByFormIdService, findQuestionByIdService, updateQuestionService } from '../services/question.service';
 
 export const createQuestionController = async (req: Request, res: Response) => {
     const result = await createQuestionService(req.body);
@@ -24,6 +24,13 @@ export const deleteQuestionController = async (req: Request<{ id: string }>, res
 export const findQuestionByFormIdController = async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.params;
     const result = await findQuestionByFormIdService(id);
+
+    return res.status(200).json({ data: result });
+}
+
+export const findQuestionByIdController = async (req: Request<{ id: string }>, res: Response) => {
+    const { id } = req.params;
+    const result = await findQuestionByIdService(id);
 
     return res.status(200).json({ data: result });
 }
