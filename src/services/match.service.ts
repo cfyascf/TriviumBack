@@ -28,6 +28,8 @@ export const createMatchService = async (payload:ICreateMatchSchema) => {
 
     await match.save();
 
+    addUserService({userId: String(user._id), pin: String(pin)})
+
     return { ...match };
 }
 
