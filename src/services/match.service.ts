@@ -6,6 +6,7 @@ import UserMatch from "../models/userMatch.model";
 import { IAddUserToGroupSchema, ICreateMatchSchema, IRemoveUserFromGroupSchema, IUpdateMatchSchema } from "../schemas/match.schema";
 import { AppError } from "../error";
 import Score from "../models/score.model";
+import Question from "../models/question.model";
 
 export const createMatchService = async (payload:ICreateMatchSchema) => {
     const pin = getRandom();
@@ -89,21 +90,23 @@ export const updateMatchService = async (payload:IUpdateMatchSchema, userId:stri
 
 export const getMatchByIdService = async (id: string) => {
     const match = await Match.findById(id);
-    
-    if (match == null) {
-        throw new AppError("Match not found.", 404);
-    }
+    if (match == null) throw new AppError("Match not found.", 404);
+
+    const form = await Form.findById(match.formId);
+    if (form == null) throw new AppError("Form not found.", 404);
 
     const userMatches = await UserMatch.find({ matchId: id });
     const usersId = userMatches.map(match => match.userId);
-
     const users = await User.find({ _id: { $in: usersId } });
 
     users.forEach(user => {
-        user.password = '';
+        user.password = ''
     });
 
-    return { match: match, users: users };
+    const questions = await Question.find({ formId: form._id });
+    const questionsIds = questions.map(question => question._id)
+
+    return { match: match, form: form, questions: questionsIds, users: users };
 }
 
 export const getMatchByUserService = async (userId: string) => {
