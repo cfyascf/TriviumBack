@@ -1,5 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from "node:http";
 import WebSocket, { WebSocketServer } from "ws";
+import { Timer } from "./services/timer.service";
 
 export interface ClientEvent {
     command: string
@@ -7,6 +8,7 @@ export interface ClientEvent {
 
 const startWSS = (server: Server<typeof IncomingMessage, typeof ServerResponse>) => {
     const wss = new WebSocketServer({ server });
+    const timer = new Timer(wss);
 
     wss.on('listening', () => {
         console.log(`Websocket running on port ${process.env.PORT}.`);
@@ -15,11 +17,21 @@ const startWSS = (server: Server<typeof IncomingMessage, typeof ServerResponse>)
             console.log("Client connected.");
 
             ws.on('message', (message: string) => {
-                const event: ClientEvent = JSON.parse(message);
+                const data = message.toString();
+                switch (data) {
+                    case "start": 
+                        timer.setTime(60);
+                        timer.startTimer();
+                        break;
 
-            //     switch (event) {
-            //         case ""
-            // }
+                    case "answer":
+                        timer.countAnswear();
+                        break;
+                }
+            });
+            
+            ws.on('close', () => {
+                console.log("Client disconnected.");
             })
         });
     });

@@ -1,20 +1,21 @@
 import WebSocket = require("ws");
 
 interface BroadcastMessage {
-  type: string;
-  time?: number;
-  finalTime?: number;
+  subject: string;
+  value: number | string;
 }
 
 export class Timer {
   private time: number; 
   private intervalId: NodeJS.Timeout | null;
   private wss: WebSocket.Server;
+  private answers: number;
 
   constructor(webSocketServer: WebSocket.Server) {
     this.time = 0;
     this.intervalId = null;
     this.wss = webSocketServer;
+    this.answers = 0;
   }
 
   startTimer(): void {
@@ -24,13 +25,18 @@ export class Timer {
     }
 
     this.intervalId = setInterval(() => {
-      this.time--;
-
-      if(this.time <= 0) {
+      if(this.time <= 1) {
         this.finishTimer();
       }
 
-      this.broadcast({ type: "tick", time: this.time });
+      if(this.answers >= this.wss.clients.size) {
+        this.finishTimer;
+      }
+
+      this.time--;
+
+      console.log(this.time);
+      this.broadcast({ subject: "tick", value: this.time });
     }, 1000);
 
     console.log("Timer iniciado.");
@@ -44,14 +50,19 @@ export class Timer {
 
     clearInterval(this.intervalId); 
     this.intervalId = null;
-    this.broadcast({ type: "finish", finalTime: this.time }); 
-
-    console.log("Timer finalizado.");
+    this.answers = 0;
     this.time = 0; 
+
+    this.broadcast({ subject: "finish", value: this.time }); 
+    console.log("Timer finalizado.");
   }
 
-  setTimer(time: number): void {
+  setTime(time: number): void {
     this.time = time;
+  }
+
+  countAnswear(): void {
+    this.answers++;
   }
 
   private broadcast(data: BroadcastMessage): void {
