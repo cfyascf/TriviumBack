@@ -20,12 +20,17 @@ const startWSS = (server: Server<typeof IncomingMessage, typeof ServerResponse>)
                 const data = message.toString();
                 switch (data) {
                     case "start": 
+                        timer.startMatch();
                         timer.setTime(60);
                         timer.startTimer();
                         break;
 
                     case "answer":
                         timer.countAnswear();
+                        break;
+
+                    case "finish":
+                        timer.finishGame();
                         break;
                 }
             });

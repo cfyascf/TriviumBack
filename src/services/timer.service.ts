@@ -18,6 +18,10 @@ export class Timer {
     this.answers = 0;
   }
 
+  startMatch(): void {
+    this.broadcast({ subject: "start", value: "match started" });
+  }
+
   startTimer(): void {
     if (this.intervalId) {
       console.log("Timer já está em execução.");
@@ -53,7 +57,7 @@ export class Timer {
     this.answers = 0;
     this.time = 0; 
 
-    this.broadcast({ subject: "finish", value: this.time }); 
+    this.broadcast({ subject: "next", value: this.time }); 
     console.log("Timer finalizado.");
   }
 
@@ -73,5 +77,11 @@ export class Timer {
         client.send(message);
       }
     });
+  }
+
+  finishGame(): void {
+    this.finishTimer();
+    this.broadcast({subject: "finish", value: "game finished"});
+    console.log("Game finished");
   }
 }
