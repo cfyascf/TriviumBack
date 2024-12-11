@@ -1,21 +1,42 @@
 import WebSocket = require("ws");
+import { getMatchByIdService } from "./match.service";
+import { findQuestionByFormIdService, findQuestionByIdService } from "./question.service";
 
-interface BroadcastMessage {
+export interface IBroadcastMessage {
   subject: string;
-  value: number | string;
+  value: number | string | IQuestion;
 }
 
-export class Timer {
+export interface IQuestionData {
+  title: string,
+  formId: string
+}
+
+export interface IOption {
+  description: string,
+  isRight: boolean
+}
+
+export interface IQuestion {
+  question: IQuestionData,
+  options: IOption[]
+}
+
+export class Game {
   private time: number; 
   private intervalId: NodeJS.Timeout | null;
   private wss: WebSocket.Server;
   private answers: number;
+  private questions: string[];
+  private index: number;
 
   constructor(webSocketServer: WebSocket.Server) {
     this.time = 0;
     this.intervalId = null;
     this.wss = webSocketServer;
     this.answers = 0;
+    this.questions = [];
+    this.index = 0;
   }
 
   startMatch(): void {
@@ -69,7 +90,17 @@ export class Timer {
     this.answers++;
   }
 
-  private broadcast(data: BroadcastMessage): void {
+  async setQuestions(matchId: string): Promise<void> {
+    const service = await getMatchByIdService(matchId);
+    this.questions = <string[]>service.questions;
+  }
+
+  async sendCurrentQuestion(): Promise<void> {
+    const service = await findQuestionByIdService(this.questions[this.index]);
+    this.broadcast({ subject: "question", value: service as unknown as IQuestion });
+  }
+
+  private broadcast(data: IBroadcastMessage): void {
     const message = JSON.stringify(data);
 
     this.wss.clients.forEach((client: WebSocket) => {

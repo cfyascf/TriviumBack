@@ -1,6 +1,6 @@
 import { IncomingMessage, Server, ServerResponse } from "node:http";
 import WebSocket, { WebSocketServer } from "ws";
-import { Timer } from "./services/timer.service";
+import { Game, IBroadcastMessage } from "./services/timer.service";
 
 export interface ClientEvent {
     command: string
@@ -8,7 +8,7 @@ export interface ClientEvent {
 
 const startWSS = (server: Server<typeof IncomingMessage, typeof ServerResponse>) => {
     const wss = new WebSocketServer({ server });
-    const timer = new Timer(wss);
+    const game = new Game(wss);
 
     wss.on('listening', () => {
         console.log(`Websocket running on port ${process.env.PORT}.`);
@@ -17,20 +17,28 @@ const startWSS = (server: Server<typeof IncomingMessage, typeof ServerResponse>)
             console.log("Client connected.");
 
             ws.on('message', (message: string) => {
-                const data = message.toString();
-                switch (data) {
+                const data = JSON.parse(message);
+
+                switch (data.subject) {
                     case "start": 
-                        timer.startMatch();
-                        timer.setTime(60);
-                        timer.startTimer();
+                        game.startMatch();
+
+                        if(typeof(data.value) === 'string') {
+                            game.setQuestions(data.value);
+                        }
                         break;
 
+                    case "question":
+                        game.sendCurrentQuestion();
+                        game.setTime(30);
+                        game.startTimer();
+
                     case "answer":
-                        timer.countAnswear();
+                        game.countAnswear();
                         break;
 
                     case "finish":
-                        timer.finishGame();
+                        game.finishGame();
                         break;
                 }
             });

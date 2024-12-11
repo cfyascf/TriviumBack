@@ -72,10 +72,10 @@ export const findQuestionByIdService = async (id: string) => {
     if(!id)
         throw new AppError('Id is missing.', 404);
 
-    const question = await Question.findById(id);
+    const question = await Question.findById(id).lean();
     if (!question) throw new AppError("Question not found.", 404);
 
-    const options = await Option.find({ questionId: question._id });
+    const options = await Option.find({ questionId: question._id }).lean();
     if (!options) throw new AppError("Option not found.", 404);
 
     return {question, options};
